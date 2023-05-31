@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Ansible-01 | 喝水加茶叶</title>
+  
+  
+  
+  <!--link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css"-->
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+<div class="Shell">
+    <aside class='SideBar'>
+    <section class='avatar' style="background-image: url()">
+        <div class='av-pic' style="background-image: url(/assets/tree_small.png)">
+        </div>
+    </section>
+    <section class='menu'>
+        <div>喝水加茶叶</div>
+        
+        <ul>
+          
+            <a href="/" class="Btn">
+              <li>Home</li>
+            </a>  
+          
+            <a href="/archives/" class="Btn">
+              <li>Archive</li>
+            </a>  
+          
+        </ul>
+    </section>
+    <section class="media">
+        
+            
+                <a target="_blank" rel="noopener" href="https://github.com/zhaoming0018/zhaoming0018.github.io">
+                    <img src="/assets/github.svg" />
+                </a>
+            
+        
+    </section>
+</aside>
+
+    <div class="container">
+        <div data-pager-shell>
+            <div>
+  <article class='ContentView'>
+    <header class='PageTitle'>
+        <h1>Ansible-01</h1>
+    </header>
+
+    <section>
+      <p>安装文件<code>setup.py</code>，执行软件的安装。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> (absolute_import, division, print_function)</span><br></pre></td></tr></table></figure>
+
+<p>用于兼容python2和python3的import、除法和print函数。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__metaclass__ = <span class="built_in">type</span></span><br></pre></td></tr></table></figure>
+
+<p>python3中缺少<code>__metaclass__</code>属性，也是为了兼容。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line">here = pathlib.Path(__file__).parent.resolve()</span><br><span class="line">install_requires = (here / <span class="string">&#x27;requirements.txt&#x27;</span>).read_text(encoding=<span class="string">&#x27;utf-8&#x27;</span>).splitlines()</span><br></pre></td></tr></table></figure>
+
+<p><code>pathlib</code>是个高级一点的文件处理函数，这里的here是一个表示当前路径的PosixPath对象。</p>
+<p>可以看到PosixPath对象重载了<code>/</code>方法，可以直接进行路径拼接，同时提供了读取内容的<code>read_text()</code>方法和拆分成行的<code>spliteline()</code>方法。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> find_packages, setup</span><br><span class="line">setup(</span><br><span class="line">    install_requires=install_requires,</span><br><span class="line">    package_dir=&#123;<span class="string">&#x27;&#x27;</span>: <span class="string">&#x27;lib&#x27;</span>,</span><br><span class="line">                 <span class="string">&#x27;ansible_test&#x27;</span>: <span class="string">&#x27;test/lib/ansible_test&#x27;</span>&#125;,</span><br><span class="line">    packages=find_packages(<span class="string">&#x27;lib&#x27;</span>) + find_packages(<span class="string">&#x27;test/lib&#x27;</span>),</span><br><span class="line">    entry_points=&#123;</span><br><span class="line">        <span class="string">&#x27;console_scripts&#x27;</span>: [</span><br><span class="line">            <span class="string">&#x27;ansible=ansible.cli.adhoc:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-config=ansible.cli.config:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-console=ansible.cli.console:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-doc=ansible.cli.doc:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-galaxy=ansible.cli.galaxy:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-inventory=ansible.cli.inventory:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-playbook=ansible.cli.playbook:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-pull=ansible.cli.pull:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-vault=ansible.cli.vault:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-connection=ansible.cli.scripts.ansible_connection_cli_stub:main&#x27;</span>,</span><br><span class="line">        ],</span><br><span class="line">    &#125;,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><code>setup</code>函数是这个文件的核心。</p>
+<p><code>install_requires</code>参数需要提供一个列表，这里从requirements.txt中获取后填入了这里。</p>
+<p><code>package_dir</code>指定了需要安装的目录，包含一个根目录lib和一个测试目录<code>ansible_test</code>。</p>
+<p><code>packages</code>是所有需要安装的源代码文件目录列表。</p>
+<p><code>entry_points</code>用来指定将软件包安装成脚本（也就是可以直接使用ansible、ansible-config的功能）的函数。</p>
+
+
+      
+
+    </section>
+    
+      <section class='ArticleMeta'>
+          <div>
+            发布于&nbsp;
+            <time datetime="2023-05-31T07:48:31.000Z" itemprop="datePublished">
+              2023-05-31
+            </time>
+          </div>
+          
+      </section>
+    
+    
+</article>
+
+  
+</div>
+
+            <footer>
+    <div>© 2023 - John Doe </div>
+    <div>
+        <span>
+            Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+        </span>
+        ,
+        <span>
+            Theme - <a target="_blank" rel="noopener" href="https://github.com/nameoverflow/hexo-theme-icalm">Icalm</a>
+        </span>
+    </div>
+</footer>
+
+        </div>
+    </div>
+</div>
+
+<script src="/js/pager/dist/singlepager.js"></script>
+
+<script>
+var sp = new Pager('data-pager-shell')
+
+</script>
+</body>
+</html>
