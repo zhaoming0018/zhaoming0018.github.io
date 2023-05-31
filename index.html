@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>喝水加茶叶</title>
+  <title>达者自在</title>
   
   
   
@@ -25,7 +25,9 @@
         </div>
     </section>
     <section class='menu'>
-        <div>喝水加茶叶</div>
+        <div>达者自在</div>
+        
+            <div>天道下济而光明，地道卑而上行</div>
         
         <ul>
           
@@ -96,90 +98,9 @@
 <p>输出的内容类似：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">10.0</span><span class="number">.0</span><span class="number">.1</span> | SUCCESS =&gt; <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;actions&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;ansible_facts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;discovered_interpreter_python&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/usr/bin/python&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;changed&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;image&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        ...</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
-
-      
-    </div>
-</article>
-
-    </li>
-  
-    <li>
-      <article class='ListView'>
-    <header class="title">
-      
-        <h1>
-          <a href="/2023/05/31/Ansible-01/">Ansible-01</a>
-        </h1>
-      
-      <div class='ListMeta'>
-  <time datetime="2023-05-31T07:48:31.000Z" itemprop="datePublished">
-    2023-05-31
-  </time>
-  
-  
-</div>
-
-    </header>
-    <div>
-      
-        <p>安装文件<code>setup.py</code>，执行软件的安装。</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> (absolute_import, division, print_function)</span><br></pre></td></tr></table></figure>
-
-<p>用于兼容python2和python3的import、除法和print函数。</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__metaclass__ = <span class="built_in">type</span></span><br></pre></td></tr></table></figure>
-
-<p>python3中缺少<code>__metaclass__</code>属性，也是为了兼容。</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line">here = pathlib.Path(__file__).parent.resolve()</span><br><span class="line">install_requires = (here / <span class="string">&#x27;requirements.txt&#x27;</span>).read_text(encoding=<span class="string">&#x27;utf-8&#x27;</span>).splitlines()</span><br></pre></td></tr></table></figure>
-
-<p><code>pathlib</code>是个高级一点的文件处理函数，这里的here是一个表示当前路径的PosixPath对象。</p>
-<p>可以看到PosixPath对象重载了<code>/</code>方法，可以直接进行路径拼接，同时提供了读取内容的<code>read_text()</code>方法和拆分成行的<code>spliteline()</code>方法。</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> find_packages, setup</span><br><span class="line">setup(</span><br><span class="line">    install_requires=install_requires,</span><br><span class="line">    package_dir=&#123;<span class="string">&#x27;&#x27;</span>: <span class="string">&#x27;lib&#x27;</span>,</span><br><span class="line">                 <span class="string">&#x27;ansible_test&#x27;</span>: <span class="string">&#x27;test/lib/ansible_test&#x27;</span>&#125;,</span><br><span class="line">    packages=find_packages(<span class="string">&#x27;lib&#x27;</span>) + find_packages(<span class="string">&#x27;test/lib&#x27;</span>),</span><br><span class="line">    entry_points=&#123;</span><br><span class="line">        <span class="string">&#x27;console_scripts&#x27;</span>: [</span><br><span class="line">            <span class="string">&#x27;ansible=ansible.cli.adhoc:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-config=ansible.cli.config:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-console=ansible.cli.console:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-doc=ansible.cli.doc:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-galaxy=ansible.cli.galaxy:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-inventory=ansible.cli.inventory:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-playbook=ansible.cli.playbook:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-pull=ansible.cli.pull:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-vault=ansible.cli.vault:main&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ansible-connection=ansible.cli.scripts.ansible_connection_cli_stub:main&#x27;</span>,</span><br><span class="line">        ],</span><br><span class="line">    &#125;,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p><code>setup</code>函数是这个文件的核心。</p>
-<p><code>install_requires</code>参数需要提供一个列表，这里从requirements.txt中获取后填入了这里。</p>
-<p><code>package_dir</code>指定了需要安装的目录，包含一个根目录lib和一个测试目录<code>ansible_test</code>。</p>
-<p><code>packages</code>是所有需要安装的源代码文件目录列表。</p>
-<p><code>entry_points</code>用来指定将软件包安装成脚本（也就是可以直接使用ansible、ansible-config的功能）的函数。</p>
-
-      
-    </div>
-</article>
-
-    </li>
-  
-    <li>
-      <article class='ListView'>
-    <header class="title">
-      
-        <h1>
-          <a href="/2023/05/31/hello-world/">Hello World</a>
-        </h1>
-      
-      <div class='ListMeta'>
-  <time datetime="2023-05-31T06:48:21.589Z" itemprop="datePublished">
-    2023-05-31
-  </time>
-  
-  
-</div>
-
-    </header>
-    <div>
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
+<p>更加详细的参数说明可以参考<a target="_blank" rel="noopener" href="https://docs.ansible.com/ansible/latest/collections/community/docker/index.html">Community.Docker — Ansible Documentation</a>。</p>
+<p>我们可以将<code>Dockerfile</code>文件的传输、构建和删除写在一个playbook里：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="number">10.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">copy</span> <span class="string">Dockerfile</span> <span class="string">to</span> <span class="string">Docker</span> <span class="string">system</span></span><br><span class="line">        <span class="attr">copy:</span></span><br><span class="line">            <span class="attr">src:</span> <span class="string">/home/zhaoyiming//workspace/ansible-docker/Dockerfile</span></span><br><span class="line">            <span class="attr">dest:</span>  <span class="string">/home/zhaoyiming/tmpdocker/Dockerfile</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">build</span> <span class="string">image</span></span><br><span class="line">      <span class="attr">docker_image:</span> </span><br><span class="line">        <span class="attr">name:</span> <span class="string">ansible-build</span></span><br><span class="line">        <span class="attr">tag:</span> <span class="string">v1</span></span><br><span class="line">        <span class="attr">build:</span>  </span><br><span class="line">          <span class="attr">path:</span> <span class="string">/home/zhaoyiming/tmpdocker/Dockerfile</span></span><br><span class="line">          <span class="attr">pull:</span> <span class="literal">yes</span></span><br><span class="line">        <span class="attr">source:</span> <span class="string">build</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">delete</span> <span class="string">Dockerfile</span></span><br><span class="line">        <span class="attr">file:</span></span><br><span class="line">            <span class="attr">path:</span> <span class="string">/home/zhaoyiming/tmpdocker/Dockerfile</span></span><br><span class="line">            <span class="attr">state:</span> <span class="string">absent</span></span><br></pre></td></tr></table></figure>
       
     </div>
 </article>
@@ -190,7 +111,7 @@
 
 
             <footer>
-    <div>© 2023 - John Doe </div>
+    <div>© 2023 - zhaoming0018 </div>
     <div>
         <span>
             Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
