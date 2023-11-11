@@ -86,7 +86,9 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> filebeat/</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
 
 <p>等待一段时间，如果没有报错并退出，可以看到当前目录下有一个二进制文件filebeat，表明编译成功。</p>
-<p><img src="/filebeat.png" alt="filebeat"></p>
+<p><img src="/images/filebeat.png" alt="filebeat"></p>
+<!--  -->
+
 <p>创建一个简单的配置文件filebeat.yml：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">log</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">paths:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">./README.md</span></span><br><span class="line"></span><br><span class="line"><span class="attr">output.console:</span></span><br><span class="line">  <span class="attr">pretty:</span> <span class="literal">true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
