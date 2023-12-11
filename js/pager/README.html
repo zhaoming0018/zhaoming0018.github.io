@@ -1,55 +1,58 @@
-<h1 id="SinglePager"><a href="#SinglePager" class="headerlink" title="SinglePager"></a>SinglePager</h1><p>Functional similar to <a href="https://github.com/dieulot/instantclick/">InstantClick</a>, makes simple static pages dynamic and instant just like a single-page-application. Only change the content of specified container.</p>
+<h1 id="singlepager">SinglePager</h1>
+<p>Functional similar to <a href="https://github.com/dieulot/instantclick/">InstantClick</a>, makes simple static pages dynamic and instant just like a single-page-application. Only change the content of specified container.</p>
 <p>For use with Hexo, Jekyll, etc.</p>
 <p>Released in ES2015 without any transformation or polyfill such as Babel.</p>
-<h2 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h2><h3 id="Initialize"><a href="#Initialize" class="headerlink" title="Initialize"></a>Initialize</h3><p>Include and initialize it.</p>
-<pre><code class="html">...
-&lt;div data-pager-shell&gt;
-  ...
-&lt;/div&gt;
-...
-
-&lt;script src=&quot;singlepager.js&quot;&gt;&lt;/script&gt;
-&lt;script&gt;
-  var sp = new Pager(&#39;data-pager-shell&#39;)
-&lt;/script&gt;
-</code></pre>
+<h2 id="usage">Usage</h2>
+<h3 id="initialize">Initialize</h3>
+<p>Include and initialize it.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb1-1" title="1">...</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">&lt;div</span><span class="ot"> data-pager-shell</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb1-3" title="3">  ...</a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">&lt;/div&gt;</span></a>
+<a class="sourceLine" id="cb1-5" title="5">...</a>
+<a class="sourceLine" id="cb1-6" title="6"></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;singlepager.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span></a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="kw">&lt;script&gt;</span></a>
+<a class="sourceLine" id="cb1-9" title="9">  <span class="kw">var</span> sp <span class="op">=</span> <span class="kw">new</span> <span class="at">Pager</span>(<span class="st">&#39;data-pager-shell&#39;</span>)</a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="kw">&lt;/script&gt;</span></a></code></pre></div>
 <p>The parameter of construct could be an attribute name string, or a configure object.</p>
-<pre><code class="typescript">interface PagerConfig {
-  shellMark?: string,     // The mark attribute to replace content
-  disableMark?: string,   // Attribute mark links not be load
-  ignoreScript?: string,  // Ignore this `&lt;script&gt;` tag
-  runBefore?: string,     // Run script in the `&lt;script&gt;` tag before page switch
-  triggerTime?: number,   // Not implement
-  historyToSave?: number  // Number of histories to save
-}
-
-const defaultConfig = &lt;PagerConfig&gt;{
-  shellMark: &#39;data-single-pager&#39;,
-  disableMark: &#39;data-pager-disabled&#39;,
-  ignoreScript: &#39;data-pager-ignore&#39;,
-  runBefore: &#39;data-run-before&#39;,
-  triggerTime: 100,
-  historyToSave: 3
-}
-</code></pre>
-<h3 id="lt-script-gt-Hook-Tag"><a href="#lt-script-gt-Hook-Tag" class="headerlink" title="&lt;script&gt; Hook Tag"></a><code>&lt;script&gt;</code> Hook Tag</h3><p>While <code>&lt;script&gt;</code> tags in container will default run after the page switching, it can be specified to run before or after the page switching.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode typescript"><code class="sourceCode typescript"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">interface</span> PagerConfig <span class="op">{</span></a>
+<a class="sourceLine" id="cb2-2" title="2">  shellMark<span class="op">?:</span> <span class="dt">string</span><span class="op">,</span>     <span class="co">// The mark attribute to replace content</span></a>
+<a class="sourceLine" id="cb2-3" title="3">  disableMark<span class="op">?:</span> <span class="dt">string</span><span class="op">,</span>   <span class="co">// Attribute mark links not be load</span></a>
+<a class="sourceLine" id="cb2-4" title="4">  ignoreScript<span class="op">?:</span> <span class="dt">string</span><span class="op">,</span>  <span class="co">// Ignore this `&lt;script&gt;` tag</span></a>
+<a class="sourceLine" id="cb2-5" title="5">  runBefore<span class="op">?:</span> <span class="dt">string</span><span class="op">,</span>     <span class="co">// Run script in the `&lt;script&gt;` tag before page switch</span></a>
+<a class="sourceLine" id="cb2-6" title="6">  triggerTime<span class="op">?:</span> <span class="dt">number</span><span class="op">,</span>   <span class="co">// Not implement</span></a>
+<a class="sourceLine" id="cb2-7" title="7">  historyToSave<span class="op">?:</span> <span class="dt">number</span>  <span class="co">// Number of histories to save</span></a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="op">}</span></a>
+<a class="sourceLine" id="cb2-9" title="9"></a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="kw">const</span> defaultConfig <span class="op">=</span> <span class="op">&lt;</span>PagerConfig<span class="op">&gt;{</span></a>
+<a class="sourceLine" id="cb2-11" title="11">  shellMark<span class="op">:</span> <span class="st">&#39;data-single-pager&#39;</span><span class="op">,</span></a>
+<a class="sourceLine" id="cb2-12" title="12">  disableMark<span class="op">:</span> <span class="st">&#39;data-pager-disabled&#39;</span><span class="op">,</span></a>
+<a class="sourceLine" id="cb2-13" title="13">  ignoreScript<span class="op">:</span> <span class="st">&#39;data-pager-ignore&#39;</span><span class="op">,</span></a>
+<a class="sourceLine" id="cb2-14" title="14">  runBefore<span class="op">:</span> <span class="st">&#39;data-run-before&#39;</span><span class="op">,</span></a>
+<a class="sourceLine" id="cb2-15" title="15">  triggerTime<span class="op">:</span> <span class="dv">100</span><span class="op">,</span></a>
+<a class="sourceLine" id="cb2-16" title="16">  historyToSave<span class="op">:</span> <span class="dv">3</span></a>
+<a class="sourceLine" id="cb2-17" title="17"><span class="op">}</span></a></code></pre></div>
+<h3 id="script-hook-tag"><code>&lt;script&gt;</code> Hook Tag</h3>
+<p>While <code>&lt;script&gt;</code> tags in container will default run after the page switching, it can be specified to run before or after the page switching.</p>
 <p>Remember that <code>&lt;script&gt;</code> with <code>data-run-before</code> (or other name setted in config) would run before the content changes, so do not make references to the target page elements.</p>
-<pre><code class="html">&lt;div data-pager-shell&gt;
-  ...
-  &lt;div id=&quot;tag&quot;&gt;&lt;/div&gt;
-  &lt;script&gt;
-    document.getElementById(&#39;tag&#39;).innerHTML += &#39;&lt;p&gt;Run after mount&lt;/p&gt;&#39;
-  &lt;/script&gt;
-  &lt;script data-run-before&gt;
-    // Error!
-    // document.getElementById(&#39;tag&#39;).innerHTML += &#39;&lt;p&gt;Run before mount&lt;/p&gt;&#39;
-    alert(&#39;Run before mount&#39;)
-  &lt;/script&gt;
-  &lt;script data-pager-disabled&gt;
-    alert(&#39;Do not run this&#39;)
-  &lt;/script&gt;
-&lt;/div&gt;
-</code></pre>
-<h2 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h2><p>Run <code>make</code> to dist, <code>make comile</code> to compile typescript (ts 2.2.1+ required)</p>
-<h2 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h2><p>Python 3.4+ required</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">&lt;div</span><span class="ot"> data-pager-shell</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb3-2" title="2">  ...</a>
+<a class="sourceLine" id="cb3-3" title="3">  <span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">&quot;tag&quot;</span><span class="kw">&gt;&lt;/div&gt;</span></a>
+<a class="sourceLine" id="cb3-4" title="4">  <span class="kw">&lt;script&gt;</span></a>
+<a class="sourceLine" id="cb3-5" title="5">    <span class="va">document</span>.<span class="at">getElementById</span>(<span class="st">&#39;tag&#39;</span>).<span class="at">innerHTML</span> <span class="op">+=</span> <span class="st">&#39;&lt;p&gt;Run after mount&lt;/p&gt;&#39;</span></a>
+<a class="sourceLine" id="cb3-6" title="6">  <span class="kw">&lt;/script&gt;</span></a>
+<a class="sourceLine" id="cb3-7" title="7">  <span class="kw">&lt;script</span><span class="ot"> data-run-before</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb3-8" title="8">    <span class="co">// Error!</span></a>
+<a class="sourceLine" id="cb3-9" title="9">    <span class="co">// document.getElementById(&#39;tag&#39;).innerHTML += &#39;&lt;p&gt;Run before mount&lt;/p&gt;&#39;</span></a>
+<a class="sourceLine" id="cb3-10" title="10">    <span class="at">alert</span>(<span class="st">&#39;Run before mount&#39;</span>)</a>
+<a class="sourceLine" id="cb3-11" title="11">  <span class="kw">&lt;/script&gt;</span></a>
+<a class="sourceLine" id="cb3-12" title="12">  <span class="kw">&lt;script</span><span class="ot"> data-pager-disabled</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb3-13" title="13">    <span class="at">alert</span>(<span class="st">&#39;Do not run this&#39;</span>)</a>
+<a class="sourceLine" id="cb3-14" title="14">  <span class="kw">&lt;/script&gt;</span></a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="kw">&lt;/div&gt;</span></a></code></pre></div>
+<h2 id="build">Build</h2>
+<p>Run <code>make</code> to dist, <code>make comile</code> to compile typescript (ts 2.2.1+ required)</p>
+<h2 id="test">Test</h2>
+<p>Python 3.4+ required</p>
 <p>Run <code>python -m http.server</code> then open <code>http://127.0.0.1:8000/test/test.html</code></p>

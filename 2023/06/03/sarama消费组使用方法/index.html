@@ -63,85 +63,72 @@
 
     <section>
       <p>sarama是开源的go语言使用kafka的库，可以帮助我们完成消费组的定义。</p>
-<h3 id="导入包"><a href="#导入包" class="headerlink" title="导入包"></a>导入包</h3><p>在使用之前需要先导入包：</p>
+<h3 id="导入包">导入包</h3>
+<p>在使用之前需要先导入包：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;github.com/Shopify/sarama&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
 <p>这样我们就可以使用sarama包了。</p>
-<h3 id="日志设置"><a href="#日志设置" class="headerlink" title="日志设置"></a>日志设置</h3><p>在使用之初，日志是一个重要的了解运行状态的工具，因此我们把日志打开。</p>
+<h3 id="日志设置">日志设置</h3>
+<p>在使用之初，日志是一个重要的了解运行状态的工具，因此我们把日志打开。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span>(</span><br><span class="line">    <span class="string">&quot;log&quot;</span></span><br><span class="line">    <span class="string">&quot;github.com/Shopify/sarama&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">sarama.Logger = log.New(os.Stdout, <span class="string">&quot;[sarama] &quot;</span>, log.LstdFlags)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <p><code>log.New</code>方法创建了一个log.Logger对象，sarama.Logger便使用这个对象来进行日志打印。三个参数的含义如下：</p>
 <ul>
-<li><p>os.Stdout表示将日志输出到标准输出里；</p>
-</li>
-<li><p><code>&quot;[sarama] &quot;</code>会显示在每个日志的开头；</p>
-</li>
-<li><p>log.LstdFlags表示日志的时间按标准（std）格式输出，标准格式类似<code>2006/01/02 15:04:05</code>;</p>
-</li>
+<li><p>os.Stdout表示将日志输出到标准输出里；</p></li>
+<li><p><code>"[sarama] "</code>会显示在每个日志的开头；</p></li>
+<li><p>log.LstdFlags表示日志的时间按标准（std）格式输出，标准格式类似<code>2006/01/02 15:04:05</code>;</p></li>
 </ul>
-<p><code>sarama.Logger</code>的默认值为<code>log.New(io.Discard, &quot;[Sarama] &quot;, log.LstdFlags)</code>，也就是丢弃了。</p>
+<p><code>sarama.Logger</code>的默认值为<code>log.New(io.Discard, "[Sarama] ", log.LstdFlags)</code>，也就是丢弃了。</p>
 <p>在srama的源码中，会用<code>Logger.Print</code>、<code>Logger.Printf</code>、<code>Logger.Println</code>进行日志打印。</p>
-<h3 id="消费组与消费者"><a href="#消费组与消费者" class="headerlink" title="消费组与消费者"></a>消费组与消费者</h3><p>为了实现基于消费组的消费功能，我们要创建一个消费组实例，再利用消费组创建消费者实例。</p>
+<h3 id="消费组与消费者">消费组与消费者</h3>
+<p>为了实现基于消费组的消费功能，我们要创建一个消费组实例，再利用消费组创建消费者实例。</p>
 <p>创建消费组的接口如下：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewConsumerGroup</span><span class="params">(addrs []<span class="type">string</span>, groupID <span class="type">string</span>, config *Config)</span></span> (ConsumerGroup, <span class="type">error</span>)</span><br></pre></td></tr></table></figure>
-
 <p>它接收三个参数：addrs、groupID和config。</p>
 <ul>
-<li><p>addrs就是broker的地址，可以有多个；</p>
-</li>
-<li><p>groupID需要你自己取个名字，这个将可以通过kafka的接口查询出来；</p>
-</li>
-<li><p>config则是消费组的配置，配置很多，稍后会介绍。</p>
-</li>
+<li><p>addrs就是broker的地址，可以有多个；</p></li>
+<li><p>groupID需要你自己取个名字，这个将可以通过kafka的接口查询出来；</p></li>
+<li><p>config则是消费组的配置，配置很多，稍后会介绍。</p></li>
 </ul>
 <p>有了消费组（例如存为变量<code>client</code>），就可以创建消费组了。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ConsumerGroup <span class="keyword">interface</span> &#123;</span><br><span class="line">    Consume(ctx context.Context, topics []<span class="type">string</span>, handler ConsumerGroupHandler) <span class="type">error</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>这是ConsumerGroup接口的Consume方法，它接收三个参数ctx、topics和handler。topics就是kafka的主题，可以配置多个，我们需要了解ctx和handler有什么作用。</p>
-<h4 id="关于上下文"><a href="#关于上下文" class="headerlink" title="关于上下文"></a>关于上下文</h4><p>ctx的类型是context.Context，也就是上下文，将多个协程装入一个上下文中，就可以利用这个上下文对其中的协程进行一些统一的操作，例如发送取消信号、定时操作和传输数据等。</p>
+<h4 id="关于上下文">关于上下文</h4>
+<p>ctx的类型是context.Context，也就是上下文，将多个协程装入一个上下文中，就可以利用这个上下文对其中的协程进行一些统一的操作，例如发送取消信号、定时操作和传输数据等。</p>
 <p>sarama一般使用上下文来管理消费者协程的停止操作，所以会定义如下的上下文：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctx, cancel := context.WithCancel(context.Background())</span><br></pre></td></tr></table></figure>
-
 <p>我们不要陷入概念之中，只要知道将ctx传给Consume之后，这个Consume就被注册到了ctx这个上下文之中了，此时如果主协程调用<code>cancel()</code>，Consume协程就会收到一个<code>ctx.Done()</code>的协程信号，Consume就可以根据这个信号进行操作，通常是关闭这个Consume的协程（注意仅仅是信号，不会实际进行操作）。</p>
-<h4 id="关于ConsumerGroupHandler"><a href="#关于ConsumerGroupHandler" class="headerlink" title="关于ConsumerGroupHandler"></a>关于ConsumerGroupHandler</h4><p>Handler一般表明一种异步处理的编程模式，你将需要针对不同的事件来实现函数，ConsumerGroupHandler同样也是如此，它是一个interface，需要实现3个方法：</p>
+<h4 id="关于consumergrouphandler">关于ConsumerGroupHandler</h4>
+<p>Handler一般表明一种异步处理的编程模式，你将需要针对不同的事件来实现函数，ConsumerGroupHandler同样也是如此，它是一个interface，需要实现3个方法：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Setup(ConsumerGroupSession) <span class="type">error</span></span><br><span class="line"></span><br><span class="line">Cleanup(ConsumerGroupSession) <span class="type">error</span></span><br><span class="line"></span><br><span class="line">ConsumeClaim(ConsumerGroupSession, ConsumerGroupClaim) <span class="type">error</span></span><br></pre></td></tr></table></figure>
-
 <p>当启动了一个消费者后，便进入了一个会话（session），Setup便是进入会话后的初始操作，你可以在这里打印个消息表示已经开启了一个消费者的会话，当然更重要的可能是一些协程间的信号同步。</p>
 <p>对应的，Cleanup就是在消费完成之后可以进行的操作，你同样可以打印个消息表示这个会话结束了。</p>
 <p>ConsumerGroupSession是一个接口类型，里面包含了如下函数：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ConsumerGroupSession <span class="keyword">interface</span> &#123;</span><br><span class="line">    Claims() <span class="keyword">map</span>[<span class="type">string</span>][]<span class="type">int32</span></span><br><span class="line">    MemberID() <span class="type">string</span></span><br><span class="line">    GenerationID() <span class="type">int32</span></span><br><span class="line">    MarkOffset(topic <span class="type">string</span>, partition <span class="type">int32</span>, offset <span class="type">int64</span>, metadata <span class="type">string</span>)</span><br><span class="line">    Commit()</span><br><span class="line">    ResetOffset(topic <span class="type">string</span>, partition <span class="type">int32</span>, offset <span class="type">int64</span>, metadata <span class="type">string</span>)</span><br><span class="line">    MarkMessage(msg *ConsumerMessage, metadata <span class="type">string</span>)</span><br><span class="line">    Context() context.Context</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当一个消费者组启动时，它会与 Kafka 服务器进行协商，以确定每个消费者所负责的分区。这个过程被称为 “rebalance”（重新平衡），其中分区被重新分配给消费者。在重新平衡之后，每个消费者将被指派一组分区，它们成为这些分区的 “claimant”（索取者）或 “owner”（所有者）。这里的<code>Claims</code>变量是一个map，key为topic的名字，value是对应的分区序号。</p>
+<p>当一个消费者组启动时，它会与 Kafka 服务器进行协商，以确定每个消费者所负责的分区。这个过程被称为 "rebalance"（重新平衡），其中分区被重新分配给消费者。在重新平衡之后，每个消费者将被指派一组分区，它们成为这些分区的 "claimant"（索取者）或 "owner"（所有者）。这里的<code>Claims</code>变量是一个map，key为topic的名字，value是对应的分区序号。</p>
 <p>我们通常需要使用<code>MarkMessage</code>函数标记消息已经处理完成。也会使用<code>Context</code>函数来获取上下文，处理上下文的<code>Done()</code>信号。</p>
 <p>接下来的ConsumeClaim函数，除了接收ConsumerGroupSession外，还接收了一个类型为ConsumerGroupClaim的参数，这个类型的定义为：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ConsumerGroupClaim <span class="keyword">interface</span> &#123;</span><br><span class="line">    <span class="comment">// 获取主题名</span></span><br><span class="line">	Topic() <span class="type">string</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// claim对应的分区</span></span><br><span class="line">	Partition() <span class="type">int32</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 起始偏移量</span></span><br><span class="line">	InitialOffset() <span class="type">int64</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 高水位偏移量，简单来说就是消费到哪了</span></span><br><span class="line">	HighWaterMarkOffset() <span class="type">int64</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 消息通道</span></span><br><span class="line">	Messages() &lt;-<span class="keyword">chan</span> *ConsumerMessage</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>我们会使用<code>Message()</code>函数返回的channel进行消息处理。通道里获取的变量是ConsumerMessage的指针类型，定义如下：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ConsumerMessage <span class="keyword">struct</span> &#123;</span><br><span class="line">	Headers        []*RecordHeader <span class="comment">// only set if kafka is version 0.11+</span></span><br><span class="line">	Timestamp      time.Time       <span class="comment">// only set if kafka is version 0.10+, inner message timestamp</span></span><br><span class="line">	BlockTimestamp time.Time       <span class="comment">// only set if kafka is version 0.10+, outer (compressed) block timestamp</span></span><br><span class="line"></span><br><span class="line">	Key, Value []<span class="type">byte</span></span><br><span class="line">	Topic      <span class="type">string</span></span><br><span class="line">	Partition  <span class="type">int32</span></span><br><span class="line">	Offset     <span class="type">int64</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>可以看到一些必要的信息，包括Key、Value、主题、分区、偏移量，都在其中。</p>
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>提供给消费者的配置通过如下方式创建：</p>
+<h3 id="配置">配置</h3>
+<p>提供给消费者的配置通过如下方式创建：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config := sarama.NewConfig()</span><br></pre></td></tr></table></figure>
-
 <p>需要设置的属性包括：</p>
-<ol>
-<li><p>config.Version，版本设置；</p>
-</li>
-<li><p>config.Consumer.Group.Rebalance.GroupStrategies：rebalance策略，包含三种策略：range（默认）、roundrobin和stick，分别需要如下设置：</p>
-</li>
+<ol type="1">
+<li><p>config.Version，版本设置；</p></li>
+<li><p>config.Consumer.Group.Rebalance.GroupStrategies：rebalance策略，包含三种策略：range（默认）、roundrobin和stick，分别需要如下设置：</p></li>
 </ol>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">config.Consumer.Group.Rebalance.GroupStrategies = []sarama.BalanceStrategy&#123;sarama.NewBalanceStrategyRange()&#125;</span><br><span class="line">config.Consumer.Group.Rebalance.GroupStrategies = []sarama.BalanceStrategy&#123;sarama.NewBalanceStrategyRoundRobin()&#125;</span><br><span class="line">config.Consumer.Group.Rebalance.GroupStrategies = []sarama.BalanceStrategy&#123;sarama.NewBalanceStrategySticky()&#125;</span><br></pre></td></tr></table></figure>
-
 <p>range策略是默认的策略，它的思路是按照分区均匀分给现在的消费者。例如有6个分区，分给3个消费者，那第一个消费者消费p0和p1，第二个消费p2和p3，第三个消费p4和p5。</p>
 <p>roundrobin策略就是一个综合了topic和分区的均匀分配策略，假如有2个topic为t0、t1，3个分区p0、p1、p2，那么就凑成了6项：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(t0p0, t0p1, t0p2, t1p0, t1p1, t1p2)</span><br></pre></td></tr></table></figure>
-
 <p>那么如果有2个消费者，则<code>(t0p0, t0p2, t1p1)</code>分给第一个，<code>(t0p1, t1p0, t1p2)</code>分给第二个。</p>
 <p>stick策略是对于每个topic，其对应的分区都均匀分配，分配策略和range相同。</p>
-<ol start="3">
+<ol start="3" type="1">
 <li>config.Consumer.Offsets.Initial，从什么位置开始消费，可以选择sarama.OffsetNewest（最新的位置）和sarama.OffsetOldest（最早的位置）。</li>
 </ol>
-<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><p>sarama仓库提供了例子：<a target="_blank" rel="noopener" href="https://github.com/Shopify/sarama/blob/main/examples/consumergroup/main.go%E3%80%82">https://github.com/Shopify/sarama/blob/main/examples/consumergroup/main.go。</a></p>
+<h3 id="案例">案例</h3>
+<p>sarama仓库提供了例子：https://github.com/Shopify/sarama/blob/main/examples/consumergroup/main.go。</p>
 
 
       
