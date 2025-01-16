@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>C++ Prime Plus 00 | 达者自在</title>
+  <title>vscode无法启动 | 达者自在</title>
   
   
   
@@ -58,13 +58,20 @@
             <div>
   <article class='ContentView'>
     <header class='PageTitle'>
-        <h1>C++ Prime Plus 00</h1>
+        <h1>vscode无法启动</h1>
     </header>
 
     <section>
-      <p>规划一下《C++ Prime Plus》（第六版）这本书的学习笔记。</p>
-<p>从目录看一共18章，除去第一章预备知识，每章一篇我们写17篇笔记，如果过于复杂的可能会拆成2篇来写。</p>
-<p>笔记不会像原文那么细致，只会抽取一些关键概念和代码进行说明，一些历史内容就跳过了。此外编译环境会使用linux，别的操作系统的相关内容也不会过多说明。</p>
+      <p>最近在wsl2中使用<code>code .</code>准备启动vsocde编写代码，但是启动失败了，报了这么一个错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/mnt/c/Users/kwai/AppData/Local/Programs/Microsoft VS Code/bin/code: 61: /mnt/c/Users/kwai/AppData/Local/Programs/Microsoft VS Code/Code.exe: Exec format error</span><br></pre></td></tr></table></figure>
+<p>要解决这个问题，首先要打开systemd。</p>
+<p>编辑<code>/etc/wsl.conf</code>文件（需要root权限）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[boot]</span><br><span class="line">systemd=true</span><br></pre></td></tr></table></figure>
+<p>启动powershell执行如下指令：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl.exe <span class="literal">--shutdown</span></span><br></pre></td></tr></table></figure>
+<p>此时powershell会重启，等待一段时间打开wsl，执行如下指令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo sh -c <span class="string">&#x27;echo :WSLInterop:M::MZ::/init:PF &gt; /usr/lib/binfmt.d/WSLInterop.conf&#x27;</span></span><br><span class="line">sudo systemctl unmask systemd-binfmt.service</span><br><span class="line">sudo systemctl restart systemd-binfmt</span><br><span class="line">sudo systemctl mask systemd-binfmt.service</span><br></pre></td></tr></table></figure>
+<p>此时再使用<code>code .</code>就成功了。</p>
 
 
       
@@ -74,8 +81,8 @@
       <section class='ArticleMeta'>
           <div>
             发布于&nbsp;
-            <time datetime="2023-09-20T05:48:11.000Z" itemprop="datePublished">
-              2023-09-20
+            <time datetime="2023-12-25T03:29:03.000Z" itemprop="datePublished">
+              2023-12-25
             </time>
           </div>
           
@@ -88,7 +95,7 @@
 </div>
 
             <footer>
-    <div>© 2023 - zhaoming0018 </div>
+    <div>© 2024 - zhaoming0018 </div>
     <div>
         <span>
             Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
