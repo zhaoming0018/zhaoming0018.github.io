@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>lazyvim | 达者自在</title>
+  
+  
+  
+  <!--link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css"-->
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="达者自在" type="application/atom+xml">
+</head>
+
+<body>
+<div class="Shell">
+    <aside class='SideBar'>
+    <section class='avatar' style="background-image: url()">
+        <div class='av-pic' style="background-image: url(/assets/tree_small.png)">
+        </div>
+    </section>
+    <section class='menu'>
+        <div>达者自在</div>
+        
+            <div>天道下济而光明，地道卑而上行</div>
+        
+        <ul>
+          
+            <a href="/" class="Btn">
+              <li>Home</li>
+            </a>  
+          
+            <a href="/archives/" class="Btn">
+              <li>Archive</li>
+            </a>  
+          
+        </ul>
+    </section>
+    <section class="media">
+        
+            
+                <a target="_blank" rel="noopener" href="https://github.com/zhaoming0018/zhaoming0018.github.io">
+                    <img src="/assets/github.svg" />
+                </a>
+            
+        
+    </section>
+</aside>
+
+    <div class="container">
+        <div data-pager-shell>
+            <div>
+  <article class='ContentView'>
+    <header class='PageTitle'>
+        <h1>lazyvim</h1>
+    </header>
+
+    <section>
+      <h2 id="关于跳转">关于跳转</h2>
+<p>lazyvim支持跳转到定义，但是不同语言需要不同的配置。</p>
+<p>c和c++需要配置clangd，首先需要安装clangd。在debian系的系统中，可以使用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sudo apt install clangd</span><br><span class="line"></span><br><span class="line">clangd --version</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>clang和clangd会容易混淆，clang是一个编译器，可以用来编译c、c++和object-c的源代码，和gcc、g++是一类东西。而clangd是一个语言服务器（LSP，Language Server Protocol），在lazyvim（或者不论什么vim中），当检测到文件类型是c、c++后，lazyvim会在后台启动clangd服务，并在之后的编程中提供语法的解析功能。</p>
+<p>接着创建配置文件：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">&quot;lspconfig&quot;</span>).clangd.setup(&#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> &#123;</span><br><span class="line">  <span class="comment">-- 自动完成</span></span><br><span class="line">  &#123; <span class="string">&quot;hrsh7th/nvim-cmp&quot;</span> &#125;,</span><br><span class="line">  <span class="comment">-- 代码定义跳转与符号搜索</span></span><br><span class="line">  &#123; <span class="string">&quot;nvim-telescope/telescope.nvim&quot;</span> &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>之后重启lazyvim，执行<code>:Lazy sync</code>，就会自动安装插件进行配置了。</p>
+<p>我们会用到的快捷键有：</p>
+<ul>
+<li>gd：跳转到定义</li>
+<li>gt：跳转到符号的定义</li>
+<li>gD：跳转到当前符号的声明</li>
+<li>gr：列出所有引用，供你跳转</li>
+<li>g;：跳转到上一个编辑的地方</li>
+<li>ctrl+o：返回跳转之前的位置</li>
+<li>ctrl+i：跳转到下一个为止，和ctrl+o相反</li>
+<li>ctrl+]：跳转到当前符号定义的位置</li>
+<li><leader>gi：跳转到实现</leader></li>
+</ul>
+<p>如果使用gd不生效，可以先看一下clangd是否注册了，指令是<code>LspInfo</code>，如果注册成功可以看到如下内容：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">LSP configs active in this buffer (bufnr: 2) ~</span><br><span class="line">- Language client log: ~/.local/state/nvim/lsp.log</span><br><span class="line">- Detected filetype: `c`</span><br><span class="line">- 1 client(s) attached to this buffer</span><br><span class="line">- Client: `clangd` (id: 1, bufnr: [2])</span><br><span class="line">  root directory:    ~/</span><br><span class="line">  filetypes:         c, cpp, objc, objcpp, cuda, proto</span><br><span class="line">  cmd:               /usr/bin/clangd</span><br><span class="line">  version:           `clangd version 10.0.0-4ubuntu1`</span><br><span class="line">  executable:        true</span><br><span class="line">  autostart:         true</span><br></pre></td></tr></table></figure>
+
+
+      
+
+    </section>
+    
+      <section class='ArticleMeta'>
+          <div>
+            发布于&nbsp;
+            <time datetime="2025-01-16T05:08:53.000Z" itemprop="datePublished">
+              2025-01-16
+            </time>
+          </div>
+          
+      </section>
+    
+    
+</article>
+
+  
+</div>
+
+            <footer>
+    <div>© 2025 - zhaoming0018 </div>
+    <div>
+        <span>
+            Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+        </span>
+        ,
+        <span>
+            Theme - <a target="_blank" rel="noopener" href="https://github.com/nameoverflow/hexo-theme-icalm">Icalm</a>
+        </span>
+    </div>
+</footer>
+
+        </div>
+    </div>
+</div>
+
+<script src="/js/pager/dist/singlepager.js"></script>
+
+<script>
+var sp = new Pager('data-pager-shell')
+
+</script>
+</body>
+</html>
